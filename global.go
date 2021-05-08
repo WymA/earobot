@@ -2,8 +2,8 @@ package earobot
 
 import "math"
 
-// Minimal Fast Sort
-func MinFastSort(x []float64, idx []int, n int, m int) {
+// MinFastSort Minimal Fast Sort
+func MinFastSort(x []float64, idx []int, n int, m int) ([]float64, []int) {
 
 	for i := 0; i < m; i++ {
 		for j := i + 1; j < n; j++ {
@@ -13,6 +13,7 @@ func MinFastSort(x []float64, idx []int, n int, m int) {
 			}
 		}
 	}
+	return x, idx
 }
 
 // DistVector calculates the distance of two vector

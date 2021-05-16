@@ -1,6 +1,7 @@
 package earobot
 
 import (
+	"math"
 	"reflect"
 	"testing"
 )
@@ -15,7 +16,14 @@ func TestDistVector(t *testing.T) {
 		args args
 		want float64
 	}{
-		// TODO: Add test cases.
+		{
+			"1",
+			args{
+				vectors1: []float64{1.0, 1.0},
+				vectors2: []float64{2.0, 2.0},
+			},
+			math.Sqrt(2.0),
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

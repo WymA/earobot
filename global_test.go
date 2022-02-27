@@ -52,11 +52,11 @@ func TestMinFastSort(t *testing.T) {
 			args{
 				x:   []float64{2, 1, 5, 3, 4},
 				idx: []int{0, 1, 2, 3, 4},
-				n:   0,
+				n:   5,
 				m:   5,
 			},
 			[]float64{1, 2, 3, 4, 5},
-			[]int{0, 1, 2, 3, 4},
+			[]int{1, 0, 3, 4, 2},
 		},
 	}
 

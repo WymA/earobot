@@ -1,6 +1,6 @@
-package earobot
+package pathplanning
 
-import "earobot/common"
+import "earobot/internal/common"
 
 func init() {
 
@@ -165,7 +165,7 @@ func GenInsert(pop *common.Population) {
 	// }
 }
 
-func GenInsertInd( ind *common.Individual,  idx int) int {
+func GenInsertInd(ind *common.Individual, idx int) int {
 
 	// //如果和前一位连续则不插，插入中值法计算出的点
 	// int bSeries = GenIsSeries(ind, idx);
@@ -246,7 +246,7 @@ func GenInsertInd( ind *common.Individual,  idx int) int {
 	// 	}
 	// }
 
-	// return 0;
+	return 0
 }
 
 //搜索当前行最短距离
@@ -254,7 +254,7 @@ func GenInsertInd( ind *common.Individual,  idx int) int {
 //curLin：当前扫描行的行值
 //curMin：未扫描该行前最短距离
 //minX：该行最短距离点的x坐标
-func SearchLineNearest( x0 int, y0 int, curLin int, preMin float64, minX *int ) float64{
+func SearchLineNearest(x0 int, y0 int, curLin int, preMin float64, minX *int) float64 {
 
 	// int xSpan = max( x0, (chartWidth-1-x0) );
 	// double tempDist, curMin;//#tempDist stands for temporary distance value?
@@ -288,17 +288,17 @@ func SearchLineNearest( x0 int, y0 int, curLin int, preMin float64, minX *int ) 
 	// }
 
 	// //没找到
-	// return preMin;
+	return preMin
 }
 
 //对种群进行评估
-func Evaluate(pop *common.Population){
+func Evaluate(pop *common.Population) {
 	// for(int i = 0; i < popSize; ++i)
 	// 	EvaluateInd(pop->ind[i], i);
 }
 
 //对个体进行评估
-func EvaluateInd( ind *common.Individual,  index int ){
+func EvaluateInd(ind *common.Individual, index int) {
 	// double A = 0.0, B = 0.0, C = 0.0;
 	// int n = ind.xPath.size() ;
 
@@ -464,19 +464,19 @@ func EvaluateInd( ind *common.Individual,  index int ){
 /////////////////////////////////////////////////////////////////////
 ////#Function to check the ind wether is in the ind or not/////
 /////////////////////////////////////////////////////////////////////
-func check(ind *common.Individual,  i int) bool {
+func check(ind *common.Individual, i int) bool {
 	// for(int k = 0; k < ind.xPath.size(); ++k){
 
 	// 	if( ind.xPath[k] == i )
 	// 		return true;
 	// }
-	// return false;
+	return false
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //// Function to assign rank and crowding distance to a population of size pop_size//
 //////////////////////////////////////////////////////////////////////////////////////////////////
-func assign_rank_and_crowding_distance(new_pop *common.Population,  popSize int){
+func assign_rank_and_crowding_distance(new_pop *common.Population, popSize int) {
 	// int flag,/* i, */end, front_size, rank = 1;
 	// list* orig, * cur, * temp1, * temp2;
 	// orig = new list;
@@ -571,7 +571,7 @@ func assign_rank_and_crowding_distance(new_pop *common.Population,  popSize int)
 }
 
 /* Routine to compute crowding distance based on ojbective function values when the population in in the form of a list */
-func assign_crowding_distance_list(pop *common.Population, list *lst,  front_size int){
+func assign_crowding_distance_list(pop *common.Population /*list *list,*/, front_size int) {
 	// int **obj_array;
 	// int *dist;
 	// int i,j;
@@ -594,7 +594,7 @@ func assign_crowding_distance_list(pop *common.Population, list *lst,  front_siz
 }
 
 /* Routine to compute crowding distance based on objective function values when the population in in the form of an array */
-func assign_crowding_distance_indices(pop *common.Population, int c1, int c2){
+func assign_crowding_distance_indices(pop *common.Population, c1 int, c2 int) {
 	// int **obj_array;
 	// int *dist;
 	// int i, j;
@@ -617,8 +617,9 @@ func assign_crowding_distance_indices(pop *common.Population, int c1, int c2){
 
 	// delete obj_array;
 }
+
 /* Routine to compute crowding distances */
-func assign_crowding_distance(pop *common.Population, int *dist, int **obj_array, int front_size){
+func assign_crowding_distance(pop *common.Population, dist *int, obj_array *int, front_size int) {
 	// int i, j;
 
 	// for(i = 0; i < nobj; ++i)
@@ -656,11 +657,10 @@ func assign_crowding_distance(pop *common.Population, int *dist, int **obj_array
 
 }
 
-func check_dominance(a *common.Individual, b *common.Individual) int{
+func check_dominance(a *common.Individual, b *common.Individual) int {
 
 	// int i, flag1, flag2;
-	// flag1 = 0;
-	// flag2 = 0;
+	flag1, flag2 := 0, 0
 
 	// for(i = 0; i < nobj; ++i){
 
@@ -679,11 +679,12 @@ func check_dominance(a *common.Individual, b *common.Individual) int{
 	// 	return 1;
 	// }else{
 
-	// 	if( flag1 == 0 && flag2 == 1 )
-	// 		return -1;
-	// 	else
-	// 		return 0;
-	// }
+	if flag1 == 0 && flag2 == 1 {
+		return -1
+	} else {
+		return 0
+	}
+
 }
 
 func fill_nondominated_sort(mixed_pop *common.Population, new_pop *common.Population, popSize int) {
@@ -797,7 +798,7 @@ func fill_nondominated_sort(mixed_pop *common.Population, new_pop *common.Popula
 	// return;
 }
 
-func crowding_fill(mixed_pop *common.Population, new_pop *common.Population, int count, int front_size, list *elite, int popSize){
+func crowding_fill(mixed_pop *common.Population, new_pop *common.Population, count int, front_size int /*list *elite,*/, popSize int) {
 	// int *dist, i, j ;
 	// list *temp;
 	// assign_crowding_distance_list(mixed_pop, elite->child, front_size);
@@ -820,7 +821,7 @@ func crowding_fill(mixed_pop *common.Population, new_pop *common.Population, int
 }
 
 /* Insert an element X into the list at location specified by NODE */
-func insert(list *node, int x){
+func insert( /*list *node,*/ x int) {
 	// list *temp;
 	// if(node == NULL){
 
@@ -840,24 +841,25 @@ func insert(list *node, int x){
 	// return;
 }
 
-/* Delete the node NODE from the list */
-func del(node *list) list* { /// #FIXME
-	// list *temp;
-	// if(node == NULL)
-	// 	exit(1);
+/// FIXME
+// /* Delete the node NODE from the list */
+// func del(node *list) list* {
+// 	// list *temp;
+// 	// if(node == NULL)
+// 	// 	exit(1);
 
-	// temp = node->parent;
-	// temp->child = node->child;
+// 	// temp = node->parent;
+// 	// temp->child = node->child;
 
-	// if(temp->child != NULL)
-	// 	temp->child->parent = temp;
+// 	// if(temp->child != NULL)
+// 	// 	temp->child->parent = temp;
 
-	// delete node;
-	// return temp;
-}
+// 	// delete node;
+// 	// return temp;
+// }
 
 /* Routine to merge two populations into one */
-func merge(pop1 *common.Population, pop2 *common.Population, pop3 *common.Population, popSize int){
+func merge(pop1 *common.Population, pop2 *common.Population, pop3 *common.Population, popSize int) {
 	// int i, k;
 
 	// for(i = 0; i < popSize; ++i)
@@ -869,7 +871,7 @@ func merge(pop1 *common.Population, pop2 *common.Population, pop3 *common.Popula
 	// return;
 }
 
-func copy_ind(ind1 *common.Individual, ind2 *common.Individual){
+func copy_ind(ind1 *common.Individual, ind2 *common.Individual) {
 	// int i;
 	// ind2->rank = ind1->rank;
 	// ind2->crowd_dist = ind1->crowd_dist;
@@ -883,11 +885,11 @@ func copy_ind(ind1 *common.Individual, ind2 *common.Individual){
 	// return;
 }
 
-func quicksort_front_obj(pop *common.Population, int objcount, int obj_array[], int obj_array_size){
-	q_sort_front_obj(pop, objcount, obj_array, 0, obj_array_size-1);
+func quicksort_front_obj(pop *common.Population, objcount int, obj_array []int, obj_array_size int) {
+	q_sort_front_obj(pop, objcount, obj_array, 0, obj_array_size-1)
 }
 
-func q_sort_front_obj(pop *common.Population, int objcount, int obj_array[], int left, int right){
+func q_sort_front_obj(pop *common.Population, objcount int, obj_array []int, left int, right int) {
 	// int index, temp, i, j ;
 	// double pivot;
 
@@ -919,42 +921,42 @@ func q_sort_front_obj(pop *common.Population, int objcount, int obj_array[], int
 	// }
 }
 
-func quicksort_dist(pop *common.Population, dist *int, front_size int){
+func quicksort_dist(pop *common.Population, dist *int, front_size int) {
 	//q_sort_dist(pop, dist, 0, front_size-1);
 }
 
-func q_sort_dist(pop *common.Population, dist *int, left int, right int){
-// 	int index, temp, i, j ;
-// 	double pivot ;
-// 	if ( left < right ){
+func q_sort_dist(pop *common.Population, dist *int, left int, right int) {
+	// 	int index, temp, i, j ;
+	// 	double pivot ;
+	// 	if ( left < right ){
 
-// 		index = rnd(left, right);
-// 		temp = dist[right];
-// 		dist[right] = dist[index];
-// 		dist[index] = temp;
-// 		pivot = pop->ind[dist[right]].crowd_dist;
-// 		i = left-1;
-// 		for (j=left; j<right; j++)
-// 		{
-// 			if (pop->ind[dist[j]].crowd_dist <= pivot)
-// 			{
-// 				i+=1;
-// 				temp = dist[j];
-// 				dist[j] = dist[i];
-// 				dist[i] = temp;
-// 			}
-// 		}
-// 		index=i+1;
-// 		temp = dist[index];
-// 		dist[index] = dist[right];
-// 		dist[right] = temp;
-// 		q_sort_dist (pop, dist, left, index-1);
-// 		q_sort_dist (pop, dist, index+1, right);
+	// 		index = rnd(left, right);
+	// 		temp = dist[right];
+	// 		dist[right] = dist[index];
+	// 		dist[index] = temp;
+	// 		pivot = pop->ind[dist[right]].crowd_dist;
+	// 		i = left-1;
+	// 		for (j=left; j<right; j++)
+	// 		{
+	// 			if (pop->ind[dist[j]].crowd_dist <= pivot)
+	// 			{
+	// 				i+=1;
+	// 				temp = dist[j];
+	// 				dist[j] = dist[i];
+	// 				dist[i] = temp;
+	// 			}
+	// 		}
+	// 		index=i+1;
+	// 		temp = dist[index];
+	// 		dist[index] = dist[right];
+	// 		dist[right] = temp;
+	// 		q_sort_dist (pop, dist, left, index-1);
+	// 		q_sort_dist (pop, dist, index+1, right);
 
-// 	}
+	// 	}
 }
 
-func allocate_memory_pop( pop *common.Population,  size int){
+func allocate_memory_pop(pop *common.Population, size int) {
 	// //int i;
 	// pop->ind = new individual[size];
 	// for( int i = 0; i < size; ++i )
@@ -962,7 +964,7 @@ func allocate_memory_pop( pop *common.Population,  size int){
 	// return ;
 }
 
-func deallocate_memory_pop(pop *common.Population,  size int){
+func deallocate_memory_pop(pop *common.Population, size int) {
 	// //int i;
 	// for( int i = 0; i < size; ++i)
 	// 	delete[] (pop->ind[i].obj);//出错误
@@ -970,7 +972,7 @@ func deallocate_memory_pop(pop *common.Population,  size int){
 	// return;
 }
 
-func report_pop(pop *common.Population, FILE *fpt,  popSize int){
+func report_pop(pop *common.Population /*FILE *fpt,*/, popSize int) {
 	// //int i, j;
 	// for ( int i=0; i<popSize; i++ ){
 

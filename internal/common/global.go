@@ -1,4 +1,4 @@
-package earobot
+package common
 
 import "math"
 

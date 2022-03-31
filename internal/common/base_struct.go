@@ -30,13 +30,13 @@ type Fitness struct {
 // }
 
 type Parameter struct {
-	pSize  int
-	T      int
-	propC  float64
-	propM  float64
-	width  int
-	height int
-	length bool
-	smooth bool
-	safe   bool
+	PopSize int
+	T       int
+	PropC   float64
+	PropM   float64
+	Width   int
+	Height  int
+	Length  bool
+	Smooth  bool
+	Safe    bool
 }

@@ -1001,21 +1001,23 @@ func Run() {
 
 	childPop := common.Population{}
 	mixedPop := common.Population{}
+	curPara := common.Parameter{}
 
 	// 	fpt1 = fopen("initial_pop.out", "w");
 	// 	fpt2 = fopen("final_pop.out", "w");
 	// 	fpt3 = fopen("all_pop.out", "w");
 	// 	fpt4 = fopen("params.out","w");
 
-	// 	//////////////////////////////////////////////////////////
-	// 	//#If population size is too small OR is not times of 4
-	// 	//#Then exit
-	// 	this->popSize = m_CurPara.pSize;
-	// 	if( this->popSize < 4 || ( this->popSize%4 ) != 0 ){
+	//////////////////////////////////////////////////////////
+	//#If population size is too small OR is not times of 4
+	//#Then exit
+	popSize = curPara.PopSize
+	if popSize < 4 || (popSize%4) != 0 {
 
-	// 		exit(1);
-	// 	}
-	// 	this->nobj = 3;
+		//exit(1)
+	}
+
+	// nobj = 3
 
 	// 	////////////////////////////////////////////////////////////////
 	// 	//#Do sth. about file output////////////////////////////////
@@ -1037,7 +1039,7 @@ func Run() {
 	// 	randomize();
 
 	// 	//#Initialize the parent
-	// 	this->Init(m_CurPara);
+	// 	this->Init(curPara);
 
 	// 	InitPop(&parent_pop);
 	// 	Evaluate(&parent_pop);

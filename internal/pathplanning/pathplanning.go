@@ -1,9 +1,14 @@
 package pathplanning
 
-import "earobot/internal/common"
+import (
+	"earobot/internal/common"
+	"fmt"
+)
 
 var curGenNum int = 0
 var popSize int = 100
+var objNum int = 3
+var parentPop = common.Population{}
 
 func init() {
 
@@ -959,12 +964,14 @@ func q_sort_dist(pop *common.Population, dist *int, left int, right int) {
 	// 	}
 }
 
-func allocate_memory_pop(pop *common.Population, size int) {
-	// //int i;
-	// pop->ind = new individual[size];
-	// for( int i = 0; i < size; ++i )
-	// 	pop->ind[i].obj = new double[nobj];
-	// return ;
+func allocate_memory_pop(pop *common.Population, size int, objNum int) {
+
+	pop.Individuals = make([]common.Individual, size)
+	for i := 0; i < size; i++ {
+		pop.Individuals[i].Obj = make([]float64, objNum)
+	}
+
+	return
 }
 
 func deallocate_memory_pop(pop *common.Population, size int) {
@@ -1014,10 +1021,9 @@ func Run() {
 	popSize = curPara.PopSize
 	if popSize < 4 || (popSize%4) != 0 {
 
+		fmt.Printf("Population size should be large over 4 and multi-times of 4.")
 		//exit(1)
 	}
-
-	// nobj = 3
 
 	// 	////////////////////////////////////////////////////////////////
 	// 	//#Do sth. about file output////////////////////////////////
@@ -1032,10 +1038,10 @@ func Run() {
 	// 	fprintf(fpt3, "# of objectives = %d\n", nobj);
 	// 	////////////////////////////////////////////////////////////////
 
-	// 	//#Allocate memory to population with population size
-	// 	allocate_memory_pop(&parent_pop, popSize);
-	// 	allocate_memory_pop(&child_pop, popSize);
-	// 	allocate_memory_pop(&mixed_pop, 2*popSize);
+	//#Allocate memory to population with population size
+	allocate_memory_pop(&parentPop, popSize, objNum)
+	allocate_memory_pop(&childPop, popSize, objNum)
+	allocate_memory_pop(&mixedPop, 2*popSize, objNum)
 	// 	randomize();
 
 	// 	//#Initialize the parent

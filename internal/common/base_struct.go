@@ -10,7 +10,7 @@ type Individual struct {
 
 // Population is a group of Individuals.
 type Population struct {
-	ind []Individual
+	Individuals []Individual
 }
 
 type Fitness struct {

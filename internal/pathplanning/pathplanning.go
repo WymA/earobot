@@ -3,12 +3,123 @@ package pathplanning
 import (
 	"earobot/internal/common"
 	"fmt"
+	"time"
 )
 
+// current generation numbers
 var curGenNum int = 0
+
+// population size
 var popSize int = 100
+
+// objective numbers
 var objNum int = 3
+
+// parent population
 var parentPop = common.Population{}
+
+// old random numbers in 55 batch
+var oldRand [55]float64
+
+// random
+var jRand int
+
+// Get seed number for random and start it up
+func Randomize() {
+
+	for i := 0; i <= 54; i++ {
+		oldRand[i] = 0.0
+	}
+
+	jRand = 0
+	WarmupRandom(float64(time.Now().Unix()))
+	return
+}
+
+// Get randomize off and running
+func WarmupRandom(seed float64) {
+
+	var j, i int
+	var new_random, prev_random float64
+	oldRand[54] = seed
+	new_random = 0.000000001
+	prev_random = seed
+
+	for j = 1; j <= 54; j++ {
+		i = (21 * j) % 54
+		oldRand[i] = new_random
+		new_random = prev_random - new_random
+		if new_random < 0.0 {
+			new_random += 1.0
+		}
+
+		prev_random = oldRand[i]
+	}
+
+	AdvanceRandom()
+	AdvanceRandom()
+	AdvanceRandom()
+	jRand = 0
+}
+
+// Create next batch of 55 random numbers
+func AdvanceRandom() {
+
+	newRandom := 0.0
+	for i := 0; i < 24; i++ {
+
+		newRandom = oldRand[i] - oldRand[i+31]
+		if newRandom < 0.0 {
+
+			newRandom = newRandom + 1.0
+		}
+		oldRand[i] = newRandom
+	}
+	for i := 24; i < 55; i++ {
+
+		newRandom = oldRand[i] - oldRand[i-24]
+		if newRandom < 0.0 {
+
+			newRandom = newRandom + 1.0
+		}
+		oldRand[i] = newRandom
+	}
+}
+
+// /* Fetch a single random number between 0.0 and 1.0 */
+// func randomperc( )
+// {
+// 	++jrand;
+// 	if( jrand >= 55 )	{
+
+// 		jrand = 1;
+// 		advance_random();
+// 	}
+// 	return ( (double)oldrand[jrand] );
+// }
+
+// /* Fetch a single random integer between low and high including the bounds */
+// func rnd ( int low, int high )
+// {
+// 	int res;
+// 	if (low >= high){
+
+// 		res = low;
+// 	}else{
+
+// 		res = low + ( randomperc()*( high - low + 1 ) ) ;
+// 		if ( res > high ){
+
+// 			res = high;
+// 		}
+// 	}
+// 	return res;
+// }
+// /* Fetch a single random real number between low and high including the bounds */
+// func rndreal ( double low, double high )
+// {
+// 	return (low + (high-low)*randomperc());
+// }
 
 func init() {
 
@@ -964,11 +1075,18 @@ func q_sort_dist(pop *common.Population, dist *int, left int, right int) {
 	// 	}
 }
 
-func allocate_memory_pop(pop *common.Population, size int, objNum int) {
+func allocate_pop(pop *common.Population, size int, objNum int) (indSize int, objSize int) {
 
 	pop.Individuals = make([]common.Individual, size)
 	for i := 0; i < size; i++ {
 		pop.Individuals[i].Obj = make([]float64, objNum)
+	}
+
+	indSize = len(pop.Individuals)
+	if indSize > 0 {
+		objSize = len(pop.Individuals[indSize-1].Obj)
+	} else {
+		objSize = 0
 	}
 
 	return
@@ -1039,9 +1157,9 @@ func Run() {
 	// 	////////////////////////////////////////////////////////////////
 
 	//#Allocate memory to population with population size
-	allocate_memory_pop(&parentPop, popSize, objNum)
-	allocate_memory_pop(&childPop, popSize, objNum)
-	allocate_memory_pop(&mixedPop, 2*popSize, objNum)
+	allocate_pop(&parentPop, popSize, objNum)
+	allocate_pop(&childPop, popSize, objNum)
+	allocate_pop(&mixedPop, 2*popSize, objNum)
 	// 	randomize();
 
 	// 	//#Initialize the parent

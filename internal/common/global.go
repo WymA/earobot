@@ -37,61 +37,66 @@ func ObservePointDistVector(vectors1 []float64, vectors2 []float64) float64 {
 	return math.Sqrt(sum)
 }
 
-// /* Get seed number for random and start i	t up */
-// func randomize()
-// {
-// 	for(int j1 = 0; j1 <= 54; ++j1)
-// 		this->oldrand[j1] = 0.0;
+// Get seed number for random and start it up 
+func Randomize()
+{
+	for i := 0; i <= 54; ++i  {
+		this->oldrand[i] = 0.0;
+	}
 
-// 	this->jrand = 0;
-// 	warmup_random((unsigned)time(NULL));
-// 	return;
-// }
-// /* Get randomize off and running */
-// func warmup_random(double seed)
-// {
-// 	int j1, ii;
-// 	double new_random, prev_random;
-// 	oldrand[54] = seed;
-// 	new_random = 0.000000001;
-// 	prev_random = seed;
-// 	for(j1 = 1; j1 <= 54; ++j1)
-// 	{
-// 		ii = (21*j1)%54;
-// 		oldrand[ii] = new_random;
-// 		new_random = prev_random - new_random;
-// 		if(new_random < 0.0)
-// 			new_random += 1.0;
-// 		prev_random = oldrand[ii];
-// 	}
-// 	advance_random();
-// 	advance_random();
-// 	advance_random();
-// 	jrand = 0;
-// }
-// /* Create next batch of 55 random numbers */
-// func advance_random ()
-// {
-// 	double new_random;
-// 	for( int j1 = 0 ; j1 < 24 ; j1++ )	{
+	this->jrand = 0;
+	WarmupRandom((unsigned)time(NULL));
+	return;
+}
 
-// 		new_random = oldrand[j1]-oldrand[j1+31];
-// 		if( new_random < 0.0 )	{
 
-// 			new_random = new_random+1.0;
-// 		}
-// 		oldrand[j1] = new_random;
-// 	}
-// 	for( int j1 = 24 ; j1 < 55 ; j1++ ) {
+// Get randomize off and running 
+func WarmupRandom(double seed)
+{
+	var j1, ii int
+	double new_random, prev_random;
+	oldrand[54] = seed;
+	new_random = 0.000000001;
+	prev_random = seed;
 
-// 		new_random = oldrand[j1]-oldrand[j1-24];
-// 		if( new_random < 0.0 ){
+	for j1 = 1; j1 <= 54; ++j1	{
+		ii = (21*j1)%54;
+		oldrand[ii] = new_random;
+		new_random = prev_random - new_random;
+		if(new_random < 0.0)
+			new_random += 1.0;
+		prev_random = oldrand[ii];
+	}
 
-// 			new_random = new_random+1.0;
-// 		}
-// 		oldrand[j1] = new_random;
-// 	}
-// }
+	AdvanceRandom();
+	AdvanceRandom();
+	AdvanceRandom();
+	jrand = 0;
+}
+
+// Create next batch of 55 random numbers
+func AdvanceRandom ()
+{
+	newRandom := 0.0;
+	for int j1 = 0 ; j1 < 24 ; j1++ 	{
+
+		newRandom = oldrand[j1]-oldrand[j1+31];
+		if( newRandom < 0.0 )	{
+
+			newRandom = newRandom+1.0;
+		}
+		oldrand[j1] = newRandom;
+	}
+	for int j1 = 24 ; j1 < 55 ; j1++  {
+
+		newRandom = oldrand[j1]-oldrand[j1-24];
+		if( newRandom < 0.0 ){
+
+			newRandom = newRandom+1.0;
+		}
+		oldrand[j1] = newRandom;
+	}
+}
 
 // /* Fetch a single random number between 0.0 and 1.0 */
 // func randomperc( )

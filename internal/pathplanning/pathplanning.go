@@ -6,6 +6,9 @@ import (
 	"time"
 )
 
+// total generation numbers
+var genNum int = 100
+
 // current generation numbers
 var curGenNum int = 0
 
@@ -24,20 +27,31 @@ var oldRand [55]float64
 // random
 var jRand int
 
+// path 1 - 3
+var path1 []int
+var path2 []int
+var path3 []int
+
+//
+var alreadyStarted bool
+
+//
+var alreadyRun bool
+
 // Get seed number for random and start it up
-func Randomize() {
+func randomize() {
 
 	for i := 0; i <= 54; i++ {
 		oldRand[i] = 0.0
 	}
 
 	jRand = 0
-	WarmupRandom(float64(time.Now().Unix()))
+	warmupRandom(float64(time.Now().Unix()))
 	return
 }
 
 // Get randomize off and running
-func WarmupRandom(seed float64) {
+func warmupRandom(seed float64) {
 
 	var j, i int
 	var new_random, prev_random float64
@@ -56,14 +70,14 @@ func WarmupRandom(seed float64) {
 		prev_random = oldRand[i]
 	}
 
-	AdvanceRandom()
-	AdvanceRandom()
-	AdvanceRandom()
+	advanceRandom()
+	advanceRandom()
+	advanceRandom()
 	jRand = 0
 }
 
 // Create next batch of 55 random numbers
-func AdvanceRandom() {
+func advanceRandom() {
 
 	newRandom := 0.0
 	for i := 0; i < 24; i++ {
@@ -121,7 +135,8 @@ func AdvanceRandom() {
 // 	return (low + (high-low)*randomperc());
 // }
 
-func init() {
+// init parameter
+func initParameter(curPara common.Parameter) {
 
 	// set population size
 	// set cross rate
@@ -132,12 +147,12 @@ func init() {
 }
 
 // initPopulation inits the population data structure
-func initPopulation() {
+func initPopulation(pop *common.Population) {
 	/// TODO
 }
 
 // initIndividual inits the individual data structure
-func initIndividual() {
+func initIndividual(pop *common.Population) {
 
 }
 
@@ -147,7 +162,7 @@ func removeDuplicatedIndividual() {
 }
 
 // removeDuplicatedGene
-func removeDuplicatedGene() {
+func removeDuplicatedGene(pop *common.Population) {
 
 }
 
@@ -157,7 +172,7 @@ func getBestIndividual() {
 }
 
 // generationSelection
-func generationSelection() {
+func generationSelection(parentPop *common.Population, childPop *common.Population) {
 
 }
 
@@ -205,7 +220,7 @@ func GenCross(parent1 *common.Individual, parent2 *common.Individual, child1 *co
 }
 
 //变异算子
-func GenMutation(pop *common.Population) {
+func generationMutation(pop *common.Population) {
 	// for(int i = 0; i < popSize; ++i)
 	// 	GenMutationInd(pop->ind[i]);
 }
@@ -265,14 +280,14 @@ func intGenIsSeries(ind *common.Individual, idx int) int {
 }
 
 //插入算子
-func GenInsert(pop *common.Population) {
+func geneInsert(pop *common.Population) {
 	// for(int i = 0; i < popSize; ++i){
 
 	// 	int len = pop->ind[i].xPath.size();
 	// 	int insertResult;
 	// 	for(int j = 1; j < len; ){
 
-	// 		insertResult = GenInsertInd(pop->ind[i], j);
+	// 		insertResult = geneInsertInd(pop->ind[i], j);
 
 	// 		if(insertResult == 0)
 	// 			j += 1;
@@ -284,7 +299,7 @@ func GenInsert(pop *common.Population) {
 	// }
 }
 
-func GenInsertInd(ind *common.Individual, idx int) int {
+func geneInsertInd(ind *common.Individual, idx int) int {
 
 	// //如果和前一位连续则不插，插入中值法计算出的点
 	// int bSeries = GenIsSeries(ind, idx);
@@ -410,8 +425,12 @@ func SearchLineNearest(x0 int, y0 int, curLin int, preMin float64, minX *int) fl
 	return preMin
 }
 
+func getPopBestObj(objectives int, path []int) {
+
+}
+
 //对种群进行评估
-func Evaluate(pop *common.Population) {
+func evaluate(pop *common.Population) {
 	// for(int i = 0; i < popSize; ++i)
 	// 	EvaluateInd(pop->ind[i], i);
 }
@@ -595,7 +614,7 @@ func check(ind *common.Individual, i int) bool {
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //// Function to assign rank and crowding distance to a population of size pop_size//
 //////////////////////////////////////////////////////////////////////////////////////////////////
-func assign_rank_and_crowding_distance(new_pop *common.Population, popSize int) {
+func assignRankAndCrowdingDistance(new_pop *common.Population, popSize int) {
 	// int flag,/* i, */end, front_size, rank = 1;
 	// list* orig, * cur, * temp1, * temp2;
 	// orig = new list;
@@ -806,7 +825,7 @@ func check_dominance(a *common.Individual, b *common.Individual) int {
 
 }
 
-func fill_nondominated_sort(mixed_pop *common.Population, new_pop *common.Population, popSize int) {
+func fill_nondominated_sort(mixedPop *common.Population, new_pop *common.Population, popSize int) {
 	// int flag, i, j, end, front_size, archieve_size, rank = 1;
 	// list *pool, *elite, *temp1, *temp2;
 	// pool = new list;
@@ -843,7 +862,7 @@ func fill_nondominated_sort(mixed_pop *common.Population, new_pop *common.Popula
 	// 			break;
 	// 		do{
 	// 			end = 0;
-	// 			flag = check_dominance(&(mixed_pop->ind[temp1->index]), &(mixed_pop->ind[temp2->index]));
+	// 			flag = check_dominance(&(mixedPop->ind[temp1->index]), &(mixedPop->ind[temp2->index]));
 	// 			if( flag == 1){
 
 	// 				insert(pool, temp2->index);
@@ -875,7 +894,7 @@ func fill_nondominated_sort(mixed_pop *common.Population, new_pop *common.Popula
 
 	// 		do{
 
-	// 			copy_ind(&mixed_pop->ind[temp2->index], &new_pop->ind[i]);
+	// 			copy_ind(&mixedPop->ind[temp2->index], &new_pop->ind[i]);
 	// 			new_pop->ind[i].rank = rank;
 	// 			++archieve_size;
 	// 			temp2 = temp2->child;
@@ -886,7 +905,7 @@ func fill_nondominated_sort(mixed_pop *common.Population, new_pop *common.Popula
 	// 		++rank;
 	// 	} else {
 
-	// 		crowding_fill(mixed_pop, new_pop, i, front_size, elite, popSize);
+	// 		crowding_fill(mixedPop, new_pop, i, front_size, elite, popSize);
 	// 		archieve_size = popSize;
 	// 		for(j = i; j < popSize; ++j)
 	// 			new_pop->ind[j].rank = rank;
@@ -917,10 +936,10 @@ func fill_nondominated_sort(mixed_pop *common.Population, new_pop *common.Popula
 	// return;
 }
 
-func crowding_fill(mixed_pop *common.Population, new_pop *common.Population, count int, front_size int /*list *elite,*/, popSize int) {
+func crowding_fill(mixedPop *common.Population, new_pop *common.Population, count int, front_size int /*list *elite,*/, popSize int) {
 	// int *dist, i, j ;
 	// list *temp;
-	// assign_crowding_distance_list(mixed_pop, elite->child, front_size);
+	// assign_crowding_distance_list(mixedPop, elite->child, front_size);
 	// dist = new int[front_size];
 	// temp = elite->child;
 
@@ -930,9 +949,9 @@ func crowding_fill(mixed_pop *common.Population, new_pop *common.Population, cou
 	// 	temp = temp->child;
 	// }
 
-	// quicksort_dist(mixed_pop, dist, front_size);
+	// quicksort_dist(mixedPop, dist, front_size);
 	// for(i = count, j = front_size-1; i < popSize; ++i, --j)
-	// 	copy_ind(&mixed_pop->ind[dist[j]], &new_pop->ind[i]);
+	// 	copy_ind(&mixedPop->ind[dist[j]], &new_pop->ind[i]);
 
 	// delete dist;
 
@@ -1160,31 +1179,34 @@ func Run() {
 	allocate_pop(&parentPop, popSize, objNum)
 	allocate_pop(&childPop, popSize, objNum)
 	allocate_pop(&mixedPop, 2*popSize, objNum)
-	// 	randomize();
+	randomize()
 
-	// 	//#Initialize the parent
-	// 	this->Init(curPara);
+	//#Initialize the parent
+	initParameter(curPara)
 
-	// 	InitPop(&parent_pop);
-	// 	Evaluate(&parent_pop);
+	initPopulation(&parentPop)
+	evaluate(&parentPop)
 
-	// 	//#assign the parent population
-	// 	assign_rank_and_crowding_distance(&parent_pop, popSize);
+	//#assign the parent population
+	assignRankAndCrowdingDistance(&parentPop, popSize)
 
-	// 	//#find the best Obj path based on 3 objs respectivefully
-	// 	GetPopBestObj(0, path1);
-	// 	GetPopBestObj(1, path2);
-	// 	GetPopBestObj(2, path3);
-	// 	m_bAlreadyStarted = true;
-	// 	m_bAlreadyRun = true;
+	//#find the best Obj path based on 3 objs respectivefully
+	getPopBestObj(0, path1)
+	getPopBestObj(1, path2)
+	getPopBestObj(2, path3)
+	alreadyStarted = true
+	alreadyRun = true
 
+	//// graphic TODO
 	// 	m_myView->Invalidate();
 	// 	m_myView->UpdateWindow();
 
-	// 	curGenNum = 1; //#current generation number = 1
-	// 	report_pop(&parent_pop, fpt1, popSize);
+	curGenNum = 1 //#current generation number = 1
+
+	//// Flush to file TODO
+	// 	report_pop(&parentPop, fpt1, popSize);
 	// 	fprintf(fpt3, "# gen = 1\n");
-	// 	report_pop(&parent_pop, fpt3, popSize);
+	// 	report_pop(&parentPop, fpt3, popSize);
 	// 	fflush(stdout);
 	// 	fflush(fpt1);
 	// 	fflush(fpt2);
@@ -1193,48 +1215,49 @@ func Run() {
 	// 	////////////////////////////////////////////////////////////////////////////
 	// 	//#1st generation done///////////////////////////////////////////////
 
-	// 	int dstTime, srcTime;
+	for curGenNum = 2; curGenNum <= genNum; curGenNum++ {
+		//#Begin with curGenNum=2; A big loop
 
-	// 	for( curGenNum = 2; curGenNum <= GenNum; ++curGenNum ){
-	// 		//#Begin with curGenNum=2; A big loop
+		////////////////////////////////////////////////////////////////////////////
+		//#Evolving//////////////////////////////////////////////////////////////
+		generationSelection(&parentPop, &childPop)
+		generationMutation(&childPop)
+		geneInsert(&childPop)
+		removeDuplicatedGene(&childPop)
+		evaluate(&childPop)
+		merge(&parentPop, &childPop, &mixedPop, popSize)
+		fill_nondominated_sort(&mixedPop, &parentPop, popSize)
 
-	// 		////////////////////////////////////////////////////////////////////////////
-	// 		//#Evolving//////////////////////////////////////////////////////////////
-	// 		GenSelection(&parent_pop, &child_pop);
-	// 		GenMutation(&child_pop);
-	// 		GenInsert(&child_pop);
-	// 		GenPopDelSame(&child_pop);
-	// 		Evaluate(&child_pop);
-	// 		merge(&parent_pop, &child_pop, &mixed_pop, popSize);
-	// 		fill_nondominated_sort(&mixed_pop, &parent_pop, popSize);
+		////////////////////////////////////////////////////////////////////////////
+		//// TODO
+		//fprintf(fpt3, "# gen = %d\n", curGenNum)
+		//report_pop(&parentPop, fpt3, popSize)
+		//fflush(fpt3)
 
-	// 		////////////////////////////////////////////////////////////////////////////
+		getPopBestObj(0, path1)
+		getPopBestObj(1, path2)
+		getPopBestObj(2, path3)
 
-	// 		fprintf(fpt3, "# gen = %d\n", curGenNum);
-	// 		report_pop(&parent_pop, fpt3, popSize);
-	// 		fflush(fpt3);
+		//// graphic TODO
+		// m_myView->Invalidate();
+		// m_myView->UpdateWindow();
 
-	// 		GetPopBestObj(0, path1);
-	// 		GetPopBestObj(1, path2);
-	// 		GetPopBestObj(2, path3);
+		dstTime := time.Now().UnixNano() / time.Hour.Milliseconds()
+		srcTime := time.Now().UnixNano() / time.Hour.Milliseconds()
+		for (dstTime - srcTime) <= 100 {
+			dstTime = time.Now().UnixNano() / time.Hour.Milliseconds()
+		}
+	}
+	curGenNum--
 
-	// 		//====================
-	// 		m_myView->Invalidate();
-	// 		m_myView->UpdateWindow();
+	//// TODO
+	// 	report_pop(&parentPop, fpt2, popSize);
 
-	// 		dstTime = srcTime = GetTickCount();
-	// 		do{
-	// 			dstTime = GetTickCount();
-	// 		}while((dstTime-srcTime) <= 100);
-	// 	}
-	// 	--curGenNum ;
+	getPopBestObj(0, path1)
+	getPopBestObj(1, path2)
+	getPopBestObj(2, path3)
 
-	// 	report_pop(&parent_pop, fpt2, popSize);
-
-	// 	GetPopBestObj(0, path1);
-	// 	GetPopBestObj(1, path2);
-	// 	GetPopBestObj(2, path3);
-
+	//// graphic TODO
 	// 	//======================
 	// 	m_myView->Invalidate();
 	// 	m_myView->UpdateWindow();
@@ -1249,8 +1272,4 @@ func Run() {
 	// 	fclose(fpt3);
 	// 	fclose(fpt4);
 
-	// 	deallocate_memory_pop(&child_pop, popSize);
-	// 	deallocate_memory_pop(&mixed_pop, 2*popSize);
-
-	// 	return 0;
 }

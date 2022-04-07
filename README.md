@@ -11,3 +11,6 @@ EARobot is a simulator program working based on Evolutionary Algorithm. The orig
 
 - Unit tests for fundamental functions.
 - Program Outline
+
+## Path Planning
+

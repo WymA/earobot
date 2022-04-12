@@ -3,56 +3,72 @@ package snga
 type SNGAInd struct {
 }
 
-//uptate the extreme point , that's f up/down
-func update_extreme_point(ind *SNGAInd) {
+// //uptate the extreme point up/down
+// func update_extreme_point(ind *SNGAInd) {
+
+// }
+
+// func init_population() {
+
+// }
+// func Pareto_HyperVolume_compare_sectorialgrid(ind *SNGAInd) {
+
+// }
+// func GetFastigiateHyperVolume(ind *SNGAInd, indIndex int, ReferencePoint []float64) {
+
+// }
+
+// func compute_hypervolume(mysectorpop []SNGAInd, mypopsize int, mynobj int) {
+
+// }
+// func tour_selection_hv_difference(p int, mypopulation []SNGAInd) {
+
+// }
+// func tour_selection_hv2(mypopulation []SNGAInd) {
+
+// }
+
+// func uniform_selection(ind_selected *SNGAInd) {
+
+// }
+// func reset_angle() {
+
+// }
+
+// func population2front(mypopulation []SNGAInd, population_front [][]float64) {
+
+// }
+// func calc_distance() {
+
+// } //calculate the average distance between ps and current solutions
+
+func genSelection() {
 
 }
 
-func init_population() {
-
-}
-func Pareto_HyperVolume_compare_sectorialgrid(ind *SNGAInd) {
-
-}
-func GetFastigiateHyperVolume(ind *SNGAInd, indIndex int, ReferencePoint []float64) {
+func genMutation() {
 
 }
 
-func compute_hypervolume(mysectorpop []SNGAInd, mypopsize int, mynobj int) {
-
-}
-func tour_selection_hv_difference(p int, mypopulation []SNGAInd) {
-
-}
-func tour_selection_hv2(mypopulation []SNGAInd) {
+func evaluation() {
 
 }
 
-func uniform_selection(ind_selected *SNGAInd) {
+func fastNondominatedSort() {
 
 }
-func reset_angle() {
-
-}
-
-func population2front(mypopulation []SNGAInd, population_front [][]float64) {
-
-}
-func calc_distance() {
-
-} //calculate the average distance between ps and current solutions
 
 // one generation
 func runOneGerration() {
 
-	// GenSelection()
-	// GenMutation()
+	genSelection()
+	genMutation()
 
 	// population.insert(population.end(), offspring.begin(), offspring.end())
 
-	// Evaluation()
+	evaluation()
 
-	// FastNondominatedSort()
+	fastNondominatedSort()
 
 	// population.clear()
 
@@ -81,17 +97,6 @@ func runOneGerration() {
 
 	// GetBestObj(kObjNodes)
 	// GetBestObj(kObjEnergy)
-
-	// // QString output ;
-
-	// // output.append( "Gen "+ QString::number(cur_gen) +": " );
-	// // output.append( " Nodes=" + QString::number( best_ind.y_var[kObjNodes] ) ) ;
-	// // output.append( " Energy=" + QString::number( best_ind.y_var[kObjEnergy] ) ) ;
-	// // output.append( " Converage: " + QString::number(maxc) ) ;
-
-	// cur_gen++
-
-	// // return output ;
 
 }
 

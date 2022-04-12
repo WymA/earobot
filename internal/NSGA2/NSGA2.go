@@ -30,9 +30,6 @@ func update_extreme_point(ind *NSGA2Ind) {
 
 }
 
-func init_population() {
-
-}
 func Pareto_HyperVolume_compare_sectorialgrid(ind *NSGA2Ind) {
 
 }
@@ -40,41 +37,58 @@ func GetFastigiateHyperVolume(ind *NSGA2Ind, indIndex int, ReferencePoint []floa
 
 }
 
-func compute_hypervolume(mysectorpop []NSGA2Ind, mypopsize int, mynobj int) {
+// func compute_hypervolume(mysectorpop []SNGAInd, mypopsize int, mynobj int) {
 
-}
-func tour_selection_hv_difference(p int, mypopulation []NSGA2Ind) {
+// }
+// func tour_selection_hv_difference(p int, mypopulation []SNGAInd) {
 
-}
-func tour_selection_hv2(mypopulation []NSGA2Ind) {
+// }
+// func tour_selection_hv2(mypopulation []SNGAInd) {
 
-}
+// }
+
+// func uniform_selection(ind_selected *SNGAInd) {
+
+// }
+// func reset_angle() {
+
+// }
 
 func uniform_selection(ind_selected *NSGA2Ind) {
 
 }
-func reset_angle() {
+
+func genSelection() {
+
+}
+
+func genMutation() {
 
 }
 
 func population2front(mypopulation []NSGA2Ind, population_front [][]float64) {
 
 }
-func calc_distance() {
 
-} //calculate the average distance between ps and current solutions
+func fastNondominatedSort() {
+
+}
+
+func evaluation() {
+
+}
 
 // one generation
 func runOneGerration() {
 
-	// GenSelection()
-	// GenMutation()
+	genSelection()
+	genMutation()
 
 	// population.insert(population.end(), offspring.begin(), offspring.end())
 
-	// Evaluation()
+	evaluation()
 
-	// FastNondominatedSort()
+	fastNondominatedSort()
 
 	// population.clear()
 
@@ -103,17 +117,6 @@ func runOneGerration() {
 
 	// GetBestObj(kObjNodes)
 	// GetBestObj(kObjEnergy)
-
-	// // QString output ;
-
-	// // output.append( "Gen "+ QString::number(cur_gen) +": " );
-	// // output.append( " Nodes=" + QString::number( best_ind.y_var[kObjNodes] ) ) ;
-	// // output.append( " Energy=" + QString::number( best_ind.y_var[kObjEnergy] ) ) ;
-	// // output.append( " Converage: " + QString::number(maxc) ) ;
-
-	// cur_gen++
-
-	// // return output ;
 
 }
 

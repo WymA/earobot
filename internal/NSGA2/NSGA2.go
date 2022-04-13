@@ -1,12 +1,14 @@
 package snga
 
 const (
-    ParetoDominating int = 0 
-    ParetoDominated 	= 1
-    ParetoNondominated  = 2
-    ParetoEqual=3
+	ParetoDominating   int = 0
+	ParetoDominated        = 1
+	ParetoNondominated     = 2
+	ParetoEqual            = 3
 )
 
+var population NSGA2Population
+var ObjectiveNumber int = 2
 
 type NSGA2Ind struct {
 	Variables      []float64
@@ -78,39 +80,44 @@ func population2front(mypopulation []NSGA2Ind, population_front [][]float64) {
 
 }
 
-func compare( ind1 *NSGA2Ind, ind2 *NSGA2Ind ) int {
+// individualRemove
+func individualRemove(slice []NSGA2Ind, s int) []NSGA2Ind {
+	return append(slice[:s], slice[s+1:]...)
+}
 
-     better := false;
-     worse := false;
+func compare(ind1 *NSGA2Ind, ind2 *NSGA2Ind) int {
 
-    for  i := 0; !( worse && better ) && ( i < kObjNum ) ; i++ {
+	better := false
+	worse := false
 
-        if ind1.y_var[i] < ind2.y_var[i] {
+	for i := 0; !(worse && better) && (i < ObjectiveNumber); i++ {
+
+		if ind1.Objectives[i] < ind2.Objectives[i] {
 			better = true
 		}
-            
-        if ind2.y_var[i] < ind1.y_var[i] {
+
+		if ind2.Objectives[i] < ind1.Objectives[i] {
 			worse = true
 		}
-            
-    }
 
-    if worse {
+	}
 
-        if better {
-            return ParetoNondominated;
-		}        else {
-            return ParetoDominated;
+	if worse {
+
+		if better {
+			return ParetoNondominated
+		} else {
+			return ParetoDominated
 		}
 
-    }else{
+	} else {
 
-        if better {
-            return ParetoDominating
-		}        else {
-            return ParetoEqual
+		if better {
+			return ParetoDominating
+		} else {
+			return ParetoEqual
 		}
-    }
+	}
 }
 
 func fastNondominatedSort() {
@@ -120,37 +127,40 @@ func fastNondominatedSort() {
 
 	//pareto_front.clear();
 
-	nextFront []NSGA2Ind
-	index []int
+	var nextFront []NSGA2Ind
+	var index []int
 
-
-	for  i := 1 ; !population.empty() ; i++ {
+	for i := 1; len(population.Individuals) > 0; i++ {
 
 		// nextFront.clear() ;
 		// index.clear();
-		for p := 0 ; p < population.size() ; p++ {
+		for p := 0; p < len(population.Individuals); p++ {
 
-			population[p].counter = 0 ;
+			population.Individuals[p].DominatedCount = 0
 
-			for q := 0 ; q < population.size()  ; q++  {
+			for q := 0; q < len(population.Individuals); q++ {
 
-				int res = compare( population[p].indiv, population[q].indiv ) ;
-				if ( kParetoDominated == res )
-					population[p].counter++ ;
+				res := compare(&population.Individuals[p], &population.Individuals[q])
+				if ParetoDominated == res {
+					population.Individuals[p].DominatedCount++
+				}
+
 			}
 
-			if ( population[p].counter == 0 ){
+			if population.Individuals[p].DominatedCount == 0 {
 
-				population[p].rank = i ;
-				nextFront.push_back( population[p] ) ;
-				index.push_back(p);
+				population.Individuals[p].Rank = i
+				nextFront = append(nextFront, population.Individuals[p])
+				index = append(index, p)
 			}
 
 		}
-		for ( int idx = index.size()-1 ; idx >= 0 ; idx-- )
-			population.erase( population.begin() + index[idx] ) ;
+		for idx := len(index) - 1; idx >= 0; idx-- {
+			individualRemove(population.Individuals, index[idx])
 
-		pareto_front.push_back( nextFront ) ;
+		}
+
+		population.ParetoFront = append(population.ParetoFront, nextFront)
 
 	}
 }

@@ -1,5 +1,15 @@
 package snga
 
+const (
+	ParetoDominating   int = 0
+	ParetoDominated        = 1
+	ParetoNondominated     = 2
+	ParetoEqual            = 3
+)
+
+var population NSGA2Population
+var ObjectiveNumber int = 2
+
 type NSGA2Ind struct {
 	Variables      []float64
 	Objectives     []float64
@@ -70,8 +80,89 @@ func population2front(mypopulation []NSGA2Ind, population_front [][]float64) {
 
 }
 
-func fastNondominatedSort() {
+// individualRemove
+func individualRemove(slice []NSGA2Ind, s int) []NSGA2Ind {
+	return append(slice[:s], slice[s+1:]...)
+}
 
+func compare(ind1 *NSGA2Ind, ind2 *NSGA2Ind) int {
+
+	better := false
+	worse := false
+
+	for i := 0; !(worse && better) && (i < ObjectiveNumber); i++ {
+
+		if ind1.Objectives[i] < ind2.Objectives[i] {
+			better = true
+		}
+
+		if ind2.Objectives[i] < ind1.Objectives[i] {
+			worse = true
+		}
+
+	}
+
+	if worse {
+
+		if better {
+			return ParetoNondominated
+		} else {
+			return ParetoDominated
+		}
+
+	} else {
+
+		if better {
+			return ParetoDominating
+		} else {
+			return ParetoEqual
+		}
+	}
+}
+
+func fastNondominatedSort() {
+	// for  i := 0 ; i < pareto_front.size() ; i++ {
+	// 	pareto_front[i].clear() ;
+	// }
+
+	//pareto_front.clear();
+
+	var nextFront []NSGA2Ind
+	var index []int
+
+	for i := 1; len(population.Individuals) > 0; i++ {
+
+		// nextFront.clear() ;
+		// index.clear();
+		for p := 0; p < len(population.Individuals); p++ {
+
+			population.Individuals[p].DominatedCount = 0
+
+			for q := 0; q < len(population.Individuals); q++ {
+
+				res := compare(&population.Individuals[p], &population.Individuals[q])
+				if ParetoDominated == res {
+					population.Individuals[p].DominatedCount++
+				}
+
+			}
+
+			if population.Individuals[p].DominatedCount == 0 {
+
+				population.Individuals[p].Rank = i
+				nextFront = append(nextFront, population.Individuals[p])
+				index = append(index, p)
+			}
+
+		}
+		for idx := len(index) - 1; idx >= 0; idx-- {
+			individualRemove(population.Individuals, index[idx])
+
+		}
+
+		population.ParetoFront = append(population.ParetoFront, nextFront)
+
+	}
 }
 
 func evaluation() {

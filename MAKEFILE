@@ -11,7 +11,7 @@ default: test
 all: test build
 build: 
 	$(GOBUILD) -o $(BINARY_NAME) ./cmd/testfunction/testfunction.go -v
-	$(GOBUILD) -o $(BINARY_NAME) ./cmd/pathplanning/pathplanning.go -v
+#	$(GOBUILD) -o $(BINARY_NAME) ./cmd/pathplanning/pathplanning.go -v
 test: 
 	$(GOTEST) -v ./...
 clean: 

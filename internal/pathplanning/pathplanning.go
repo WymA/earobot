@@ -443,7 +443,7 @@ func EvaluateInd(ind *common.Individual, index int) {
 	// //#对长度的评价
 	// for ( int j = 1; j < n; j++ ){
 
-	// 	//前一个点和当前点在栅格图上的坐标
+	//
 	// 	int x1,x2,y1,y2;
 	// 	x1 = ind.xPath[j-1] % chartWidth ;
 	// 	y1 = ind.xPath[j-1] / chartWidth ;
@@ -455,7 +455,7 @@ func EvaluateInd(ind *common.Individual, index int) {
 	// //#对个体光滑度的评价
 	// for (int j = 1; j < n-1; j++){
 
-	// 	//前一个点和当前点在栅格图上的坐标
+	//
 	// 	double angle, len1,len2;
 	// 	int x1, x2, y1, y2, x3, y3,
 	// 		vectorx1, vectory1, vectorx2, vectory2 ;
@@ -1111,46 +1111,14 @@ func allocate_pop(pop *common.Population, size int, objNum int) (indSize int, ob
 	return
 }
 
-func deallocate_memory_pop(pop *common.Population, size int) {
-	// //int i;
-	// for( int i = 0; i < size; ++i)
-	// 	delete[] (pop->ind[i].obj);//出错误
-	// delete[] (pop->ind);
-	// return;
-}
-
-func report_pop(pop *common.Population /*FILE *fpt,*/, popSize int) {
-	// //int i, j;
-	// for ( int i=0; i<popSize; i++ ){
-
-	// 	for ( int j=0; j<nobj; j++ ){
-
-	// 		fprintf(fpt,"%e\t",pop->ind[i].obj[j]);
-	// 	}
-	// 	fprintf(fpt,"%d\t",pop->ind[i].rank);
-	// 	fprintf(fpt,"%e\n",pop->ind[i].crowd_dist);
-	// }
-	// return;
-}
-
 func Run() {
 
 	// init
 	curGenNum = 0
 
-	// 	FILE *fpt1;
-	// 	FILE *fpt2;
-	// 	FILE *fpt3;
-	// 	FILE *fpt4;
-
 	childPop := common.Population{}
 	mixedPop := common.Population{}
 	curPara := common.Parameter{}
-
-	// 	fpt1 = fopen("initial_pop.out", "w");
-	// 	fpt2 = fopen("final_pop.out", "w");
-	// 	fpt3 = fopen("all_pop.out", "w");
-	// 	fpt4 = fopen("params.out","w");
 
 	//////////////////////////////////////////////////////////
 	//#If population size is too small OR is not times of 4
@@ -1161,19 +1129,6 @@ func Run() {
 		fmt.Printf("Population size should be large over 4 and multi-times of 4.")
 		//exit(1)
 	}
-
-	// 	////////////////////////////////////////////////////////////////
-	// 	//#Do sth. about file output////////////////////////////////
-
-	// 	fprintf(fpt4, "\n Population size = %d", popSize);
-	// 	fprintf(fpt4, "\n Number of generations = %d", GenNum);
-	// 	fprintf(fpt4, "\n Number of objective functions = %d", nobj);
-	// 	fprintf(fpt4, "\n Probability of crossover of real variable = %e", Pc);
-	// 	fprintf(fpt4, "\n Probability of mutation of real variable = %e", Pm);
-	// 	fprintf(fpt1, "# of objectives = %d\n", nobj);
-	// 	fprintf(fpt2, "# of objectives = %d\n", nobj);
-	// 	fprintf(fpt3, "# of objectives = %d\n", nobj);
-	// 	////////////////////////////////////////////////////////////////
 
 	//#Allocate memory to population with population size
 	allocate_pop(&parentPop, popSize, objNum)
@@ -1205,7 +1160,7 @@ func Run() {
 
 	//// Flush to file TODO
 	// 	report_pop(&parentPop, fpt1, popSize);
-	// 	fprintf(fpt3, "# gen = 1\n");
+
 	// 	report_pop(&parentPop, fpt3, popSize);
 	// 	fflush(stdout);
 	// 	fflush(fpt1);
@@ -1230,7 +1185,7 @@ func Run() {
 
 		////////////////////////////////////////////////////////////////////////////
 		//// TODO
-		//fprintf(fpt3, "# gen = %d\n", curGenNum)
+
 		//report_pop(&parentPop, fpt3, popSize)
 		//fflush(fpt3)
 

@@ -1,5 +1,9 @@
 package snga
 
+import (
+	"earobot/internal/common"
+)
+
 const (
 	ParetoDominating   int = 0
 	ParetoDominated        = 1
@@ -11,8 +15,7 @@ var population NSGA2Population
 var ObjectiveNumber int = 2
 
 type NSGA2Ind struct {
-	Variables      []float64
-	Objectives     []float64
+	common.Individual
 	Rank           int
 	CrowdDist      float64
 	DominatedCount int
@@ -35,38 +38,21 @@ type NSGA2Population struct {
 	ParetoFront [][]NSGA2Ind
 }
 
-//uptate the extreme point , that's f up/down
-func update_extreme_point(ind *NSGA2Ind) {
-
-}
-
-func Pareto_HyperVolume_compare_sectorialgrid(ind *NSGA2Ind) {
-
-}
-func GetFastigiateHyperVolume(ind *NSGA2Ind, indIndex int, ReferencePoint []float64) {
-
-}
-
-// func compute_hypervolume(mysectorpop []SNGAInd, mypopsize int, mynobj int) {
-
-// }
-// func tour_selection_hv_difference(p int, mypopulation []SNGAInd) {
-
-// }
-// func tour_selection_hv2(mypopulation []SNGAInd) {
+// //uptate the extreme point , that's f up/down
+// func update_extreme_point(ind *NSGA2Ind) {
 
 // }
 
-// func uniform_selection(ind_selected *SNGAInd) {
+// func Pareto_HyperVolume_compare_sectorialgrid(ind *NSGA2Ind) {
 
 // }
-// func reset_angle() {
+// func GetFastigiateHyperVolume(ind *NSGA2Ind, indIndex int, ReferencePoint []float64) {
 
 // }
 
-func uniform_selection(ind_selected *NSGA2Ind) {
+// func uniform_selection(ind_selected *NSGA2Ind) {
 
-}
+// }
 
 func genSelection() {
 
@@ -76,9 +62,27 @@ func genMutation() {
 
 }
 
-func population2front(mypopulation []NSGA2Ind, population_front [][]float64) {
+// compare two individuals
+func tournament(ind1 *NSGA2Ind, ind2 *NSGA2Ind) *NSGA2Ind {
 
+	res := compare(ind1, ind2)
+
+	if res == ParetoDominating {
+		return ind1
+	}
+	if res == ParetoDominated {
+		return ind2
+	}
+	if ind1.CrowdDist >= ind2.CrowdDist {
+		return ind1
+	} else {
+		return ind2
+	}
 }
+
+// func population2front(mypopulation []NSGA2Ind, population_front [][]float64) {
+
+// }
 
 func compare(ind1 *NSGA2Ind, ind2 *NSGA2Ind) int {
 

@@ -1,7 +1,6 @@
 package pathplanning
 
 import (
-	"earobot/internal/common"
 	"fmt"
 	"time"
 )
@@ -19,7 +18,7 @@ var popSize int = 100
 var objNum int = 3
 
 // parent population
-var parentPop = common.Population{}
+var parentPop = Population{}
 
 // old random numbers in 55 batch
 var oldRand [55]float64
@@ -37,6 +36,47 @@ var alreadyStarted bool
 
 //
 var alreadyRun bool
+
+// Individual is the subject in Evolution Algorithms
+type Individual struct {
+	Rank      int       // Ranking mark
+	Obj       []float64 // Object list
+	CrowdDist float64   // Distance among Objects in a Population
+	Path      []int     // Sepecified for PathPlanning
+}
+
+// Population is a group of Individuals.
+type Population struct {
+	Individuals []Individual
+}
+
+type Fitness struct {
+	A float64 //对个体长度的评价
+	B float64 //对个体光滑度的评价
+	C float64 //对个体安全性的评价
+	//	 D float64;//综合评价
+}
+
+//static struct  Fitness fit[1000];
+//static struct Fitness F;
+
+// type  Lists struct {
+// 	int index;
+// 	lists *parent;
+// 	lists *child;
+// }
+
+type Parameter struct {
+	PopSize int
+	T       int
+	PropC   float64
+	PropM   float64
+	Width   int
+	Height  int
+	Length  bool
+	Smooth  bool
+	Safe    bool
+}
 
 // Get seed number for random and start it up
 func randomize() {
@@ -136,7 +176,7 @@ func advanceRandom() {
 // }
 
 // init parameter
-func initParameter(curPara common.Parameter) {
+func initParameter(curPara Parameter) {
 
 	// set population size
 	// set cross rate
@@ -147,12 +187,12 @@ func initParameter(curPara common.Parameter) {
 }
 
 // initPopulation inits the population data structure
-func initPopulation(pop *common.Population) {
+func initPopulation(pop *Population) {
 	/// TODO
 }
 
 // initIndividual inits the individual data structure
-func initIndividual(pop *common.Population) {
+func initIndividual(pop *Population) {
 
 }
 
@@ -162,7 +202,7 @@ func removeDuplicatedIndividual() {
 }
 
 // removeDuplicatedGene
-func removeDuplicatedGene(pop *common.Population) {
+func removeDuplicatedGene(pop *Population) {
 
 }
 
@@ -172,7 +212,7 @@ func getBestIndividual() {
 }
 
 // generationSelection
-func generationSelection(parentPop *common.Population, childPop *common.Population) {
+func generationSelection(parentPop *Population, childPop *Population) {
 
 }
 
@@ -182,7 +222,7 @@ func tournament() {
 }
 
 //交叉基因
-func GenCross(parent1 *common.Individual, parent2 *common.Individual, child1 *common.Individual, child2 *common.Individual) {
+func GenCross(parent1 *Individual, parent2 *Individual, child1 *Individual, child2 *Individual) {
 
 	// double p = rand()%1000/1000.0;
 	// int Parent1Length = parent1->xPath.size(); //第一个以及第二个父个体长度
@@ -220,12 +260,12 @@ func GenCross(parent1 *common.Individual, parent2 *common.Individual, child1 *co
 }
 
 //变异算子
-func generationMutation(pop *common.Population) {
+func generationMutation(pop *Population) {
 	// for(int i = 0; i < popSize; ++i)
 	// 	GenMutationInd(pop->ind[i]);
 }
 
-func GenMutationInd(ind *common.Individual) {
+func GenMutationInd(ind *Individual) {
 	// double p = rand()%1000/1000.0;
 	// if( p < Pm && ind.xPath.size() > 2){
 
@@ -249,7 +289,7 @@ func GenMutationInd(ind *common.Individual) {
 }
 
 //0-不连续，1-与前一个连续，2-与前后都连续
-func intGenIsSeries(ind *common.Individual, idx int) int {
+func intGenIsSeries(ind *Individual, idx int) int {
 	// int pre, cur, next;
 	// pre = ind.xPath[idx-1];
 	// cur = ind.xPath[idx];
@@ -280,7 +320,7 @@ func intGenIsSeries(ind *common.Individual, idx int) int {
 }
 
 //插入算子
-func geneInsert(pop *common.Population) {
+func geneInsert(pop *Population) {
 	// for(int i = 0; i < popSize; ++i){
 
 	// 	int len = pop->ind[i].xPath.size();
@@ -299,7 +339,7 @@ func geneInsert(pop *common.Population) {
 	// }
 }
 
-func geneInsertInd(ind *common.Individual, idx int) int {
+func geneInsertInd(ind *Individual, idx int) int {
 
 	// //如果和前一位连续则不插，插入中值法计算出的点
 	// int bSeries = GenIsSeries(ind, idx);
@@ -430,13 +470,13 @@ func getPopBestObj(objectives int, path []int) {
 }
 
 //对种群进行评估
-func evaluate(pop *common.Population) {
+func evaluate(pop *Population) {
 	// for(int i = 0; i < popSize; ++i)
 	// 	EvaluateInd(pop->ind[i], i);
 }
 
 //对个体进行评估
-func EvaluateInd(ind *common.Individual, index int) {
+func EvaluateInd(ind *Individual, index int) {
 	// double A = 0.0, B = 0.0, C = 0.0;
 	// int n = ind.xPath.size() ;
 
@@ -602,7 +642,7 @@ func EvaluateInd(ind *common.Individual, index int) {
 /////////////////////////////////////////////////////////////////////
 ////#Function to check the ind wether is in the ind or not/////
 /////////////////////////////////////////////////////////////////////
-func check(ind *common.Individual, i int) bool {
+func check(ind *Individual, i int) bool {
 	// for(int k = 0; k < ind.xPath.size(); ++k){
 
 	// 	if( ind.xPath[k] == i )
@@ -614,7 +654,7 @@ func check(ind *common.Individual, i int) bool {
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //// Function to assign rank and crowding distance to a population of size pop_size//
 //////////////////////////////////////////////////////////////////////////////////////////////////
-func assignRankAndCrowdingDistance(new_pop *common.Population, popSize int) {
+func assignRankAndCrowdingDistance(new_pop *Population, popSize int) {
 	// int flag,/* i, */end, front_size, rank = 1;
 	// list* orig, * cur, * temp1, * temp2;
 	// orig = new list;
@@ -709,7 +749,7 @@ func assignRankAndCrowdingDistance(new_pop *common.Population, popSize int) {
 }
 
 /* Routine to compute crowding distance based on ojbective function values when the population in in the form of a list */
-func assign_crowding_distance_list(pop *common.Population /*list *list,*/, front_size int) {
+func assign_crowding_distance_list(pop *Population /*list *list,*/, front_size int) {
 	// int **obj_array;
 	// int *dist;
 	// int i,j;
@@ -732,7 +772,7 @@ func assign_crowding_distance_list(pop *common.Population /*list *list,*/, front
 }
 
 /* Routine to compute crowding distance based on objective function values when the population in in the form of an array */
-func assign_crowding_distance_indices(pop *common.Population, c1 int, c2 int) {
+func assign_crowding_distance_indices(pop *Population, c1 int, c2 int) {
 	// int **obj_array;
 	// int *dist;
 	// int i, j;
@@ -757,7 +797,7 @@ func assign_crowding_distance_indices(pop *common.Population, c1 int, c2 int) {
 }
 
 /* Routine to compute crowding distances */
-func assign_crowding_distance(pop *common.Population, dist *int, obj_array *int, front_size int) {
+func assign_crowding_distance(pop *Population, dist *int, obj_array *int, front_size int) {
 	// int i, j;
 
 	// for(i = 0; i < nobj; ++i)
@@ -795,7 +835,7 @@ func assign_crowding_distance(pop *common.Population, dist *int, obj_array *int,
 
 }
 
-func check_dominance(a *common.Individual, b *common.Individual) int {
+func check_dominance(a *Individual, b *Individual) int {
 
 	// int i, flag1, flag2;
 	flag1, flag2 := 0, 0
@@ -825,7 +865,7 @@ func check_dominance(a *common.Individual, b *common.Individual) int {
 
 }
 
-func fill_nondominated_sort(mixedPop *common.Population, new_pop *common.Population, popSize int) {
+func fill_nondominated_sort(mixedPop *Population, new_pop *Population, popSize int) {
 	// int flag, i, j, end, front_size, archieve_size, rank = 1;
 	// list *pool, *elite, *temp1, *temp2;
 	// pool = new list;
@@ -936,7 +976,7 @@ func fill_nondominated_sort(mixedPop *common.Population, new_pop *common.Populat
 	// return;
 }
 
-func crowding_fill(mixedPop *common.Population, new_pop *common.Population, count int, front_size int /*list *elite,*/, popSize int) {
+func crowding_fill(mixedPop *Population, new_pop *Population, count int, front_size int /*list *elite,*/, popSize int) {
 	// int *dist, i, j ;
 	// list *temp;
 	// assign_crowding_distance_list(mixedPop, elite->child, front_size);
@@ -997,7 +1037,7 @@ func insert( /*list *node,*/ x int) {
 // }
 
 /* Routine to merge two populations into one */
-func merge(pop1 *common.Population, pop2 *common.Population, pop3 *common.Population, popSize int) {
+func merge(pop1 *Population, pop2 *Population, pop3 *Population, popSize int) {
 	// int i, k;
 
 	// for(i = 0; i < popSize; ++i)
@@ -1009,7 +1049,7 @@ func merge(pop1 *common.Population, pop2 *common.Population, pop3 *common.Popula
 	// return;
 }
 
-func copy_ind(ind1 *common.Individual, ind2 *common.Individual) {
+func copy_ind(ind1 *Individual, ind2 *Individual) {
 	// int i;
 	// ind2->rank = ind1->rank;
 	// ind2->crowd_dist = ind1->crowd_dist;
@@ -1023,11 +1063,11 @@ func copy_ind(ind1 *common.Individual, ind2 *common.Individual) {
 	// return;
 }
 
-func quicksort_front_obj(pop *common.Population, objcount int, obj_array []int, obj_array_size int) {
+func quicksort_front_obj(pop *Population, objcount int, obj_array []int, obj_array_size int) {
 	q_sort_front_obj(pop, objcount, obj_array, 0, obj_array_size-1)
 }
 
-func q_sort_front_obj(pop *common.Population, objcount int, obj_array []int, left int, right int) {
+func q_sort_front_obj(pop *Population, objcount int, obj_array []int, left int, right int) {
 	// int index, temp, i, j ;
 	// double pivot;
 
@@ -1059,11 +1099,11 @@ func q_sort_front_obj(pop *common.Population, objcount int, obj_array []int, lef
 	// }
 }
 
-func quicksort_dist(pop *common.Population, dist *int, front_size int) {
+func quicksort_dist(pop *Population, dist *int, front_size int) {
 	//q_sort_dist(pop, dist, 0, front_size-1);
 }
 
-func q_sort_dist(pop *common.Population, dist *int, left int, right int) {
+func q_sort_dist(pop *Population, dist *int, left int, right int) {
 	// 	int index, temp, i, j ;
 	// 	double pivot ;
 	// 	if ( left < right ){
@@ -1094,9 +1134,9 @@ func q_sort_dist(pop *common.Population, dist *int, left int, right int) {
 	// 	}
 }
 
-func allocate_pop(pop *common.Population, size int, objNum int) (indSize int, objSize int) {
+func allocate_pop(pop *Population, size int, objNum int) (indSize int, objSize int) {
 
-	pop.Individuals = make([]common.Individual, size)
+	pop.Individuals = make([]Individual, size)
 	for i := 0; i < size; i++ {
 		pop.Individuals[i].Obj = make([]float64, objNum)
 	}
@@ -1116,9 +1156,9 @@ func Run() {
 	// init
 	curGenNum = 0
 
-	childPop := common.Population{}
-	mixedPop := common.Population{}
-	curPara := common.Parameter{}
+	childPop := Population{}
+	mixedPop := Population{}
+	curPara := Parameter{}
 
 	//////////////////////////////////////////////////////////
 	//#If population size is too small OR is not times of 4

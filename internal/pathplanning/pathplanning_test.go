@@ -1,13 +1,12 @@
 package pathplanning
 
 import (
-	"earobot/internal/common"
 	"testing"
 )
 
 func Test_allocate_pop(t *testing.T) {
 	type args struct {
-		pop    *common.Population
+		pop    *Population
 		size   int
 		objNum int
 	}
@@ -20,7 +19,7 @@ func Test_allocate_pop(t *testing.T) {
 		{
 			"seze-100-obj-10",
 			args{
-				pop:    &common.Population{Individuals: []common.Individual{}},
+				pop:    &Population{Individuals: []Individual{}},
 				size:   100,
 				objNum: 10,
 			},
@@ -30,7 +29,7 @@ func Test_allocate_pop(t *testing.T) {
 		{
 			"seze-1-obj-1",
 			args{
-				pop:    &common.Population{Individuals: []common.Individual{}},
+				pop:    &Population{Individuals: []Individual{}},
 				size:   1,
 				objNum: 1,
 			},
@@ -40,7 +39,7 @@ func Test_allocate_pop(t *testing.T) {
 		{
 			"seze-0-obj-1",
 			args{
-				pop:    &common.Population{Individuals: []common.Individual{}},
+				pop:    &Population{Individuals: []Individual{}},
 				size:   0,
 				objNum: 1,
 			},
@@ -50,7 +49,7 @@ func Test_allocate_pop(t *testing.T) {
 		{
 			"seze-1-obj-0",
 			args{
-				pop:    &common.Population{Individuals: []common.Individual{}},
+				pop:    &Population{Individuals: []Individual{}},
 				size:   1,
 				objNum: 0,
 			},

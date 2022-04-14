@@ -1,6 +1,12 @@
 package common
 
-import "math"
+import (
+	"math"
+	"math/rand"
+	"time"
+)
+
+var RandomUtil = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 // MinFastSort Minimal Fast Sort
 func MinFastSort(x []float64, idx []int, n int, m int) ([]float64, []int) {

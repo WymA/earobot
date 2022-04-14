@@ -80,11 +80,6 @@ func population2front(mypopulation []NSGA2Ind, population_front [][]float64) {
 
 }
 
-// individualRemove
-func individualRemove(slice []NSGA2Ind, s int) []NSGA2Ind {
-	return append(slice[:s], slice[s+1:]...)
-}
-
 func compare(ind1 *NSGA2Ind, ind2 *NSGA2Ind) int {
 
 	better := false
@@ -121,19 +116,16 @@ func compare(ind1 *NSGA2Ind, ind2 *NSGA2Ind) int {
 }
 
 func fastNondominatedSort() {
-	// for  i := 0 ; i < pareto_front.size() ; i++ {
-	// 	pareto_front[i].clear() ;
-	// }
 
-	//pareto_front.clear();
+	population.ParetoFront = make([][]NSGA2Ind, 0)
 
 	var nextFront []NSGA2Ind
 	var index []int
 
 	for i := 1; len(population.Individuals) > 0; i++ {
 
-		// nextFront.clear() ;
-		// index.clear();
+		nextFront = make([]NSGA2Ind, 0)
+		index = make([]int, 0)
 		for p := 0; p < len(population.Individuals); p++ {
 
 			population.Individuals[p].DominatedCount = 0
@@ -156,8 +148,8 @@ func fastNondominatedSort() {
 
 		}
 		for idx := len(index) - 1; idx >= 0; idx-- {
-			individualRemove(population.Individuals, index[idx])
 
+			population.Individuals = append(population.Individuals[:index[idx]], population.Individuals[index[idx]+1:]...) // delete element
 		}
 
 		population.ParetoFront = append(population.ParetoFront, nextFront)

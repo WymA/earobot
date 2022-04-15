@@ -8,11 +8,29 @@ type Individual struct {
 type Population struct {
 }
 
-func GeneCrossInd(crossRate float64, parent1 *Individual, parent2 *Individual, child1 *Individual, child2 *Individual) {
+type Problem struct {
+	VariablesLength int
+	VariablesMin    float64
+	VariablesMax    float64
+	ObjectivesNum   int
+	CroseoverRate   float64
+}
+
+func (rcvr *Individual) RandomInit(length int, min float64, max float64) {
+	rcvr.Variables = make([]float64, length)
+	for i := 0; i < length; i++ {
+		rcvr.Variables[i] = min + RandomUtil.Float64()*max
+	}
+}
+
+func (rcvr *Problem) GeneCrossInd(parent1 *Individual, parent2 *Individual) (child1 *Individual, child2 *Individual) {
+
+	child1.RandomInit(rcvr.VariablesLength, rcvr.VariablesMin, rcvr.VariablesMax)
+	child2.RandomInit(rcvr.VariablesLength, rcvr.VariablesMin, rcvr.VariablesMax)
 
 	randomRate := RandomUtil.Float64() //%1000 / 100
 
-	if randomRate < crossRate {
+	if randomRate < rcvr.CroseoverRate {
 		// crosover gene between wo parents to
 		parent1CrossPoint := 1 + RandomUtil.Intn(len(parent1.Variables)-1)
 		parent2CrossPoint := 1 + RandomUtil.Intn(len(parent2.Variables)-1)
@@ -31,4 +49,6 @@ func GeneCrossInd(crossRate float64, parent1 *Individual, parent2 *Individual, c
 		child1 = parent1
 		child2 = parent2
 	}
+
+	return child1, child2
 }

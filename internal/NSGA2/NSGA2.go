@@ -25,10 +25,6 @@ type NSGA2Ind struct {
 
 }
 
-func (rcvr *NSGA2Ind) RandomInit(varRange int) {
-
-}
-
 // func (rcvr *NSGA2Ind) ObjEvaluation() {
 
 // }

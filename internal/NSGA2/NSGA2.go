@@ -4,20 +4,12 @@ import (
 	"earobot/internal/common"
 )
 
-const (
-	ParetoDominating   int = 0
-	ParetoDominated        = 1
-	ParetoNondominated     = 2
-	ParetoEqual            = 3
-)
-
 var population NSGA2Population
-var ObjectiveNumber int = 2
+var evolutionaryAlgo common.EvolutionaryAlgo
 
 type NSGA2Ind struct {
 	common.Individual
 	Rank           int
-	CrowdDist      float64
 	DominatedCount int
 
 	// SectorialAngle float64
@@ -58,62 +50,9 @@ func genMutation() {
 
 }
 
-// compare two individuals
-func tournament(ind1 *NSGA2Ind, ind2 *NSGA2Ind) *NSGA2Ind {
-
-	res := compare(ind1, ind2)
-
-	if res == ParetoDominating {
-		return ind1
-	}
-	if res == ParetoDominated {
-		return ind2
-	}
-	if ind1.CrowdDist >= ind2.CrowdDist {
-		return ind1
-	} else {
-		return ind2
-	}
-}
-
 // func population2front(mypopulation []NSGA2Ind, population_front [][]float64) {
 
 // }
-
-func compare(ind1 *NSGA2Ind, ind2 *NSGA2Ind) int {
-
-	better := false
-	worse := false
-
-	for i := 0; !(worse && better) && (i < ObjectiveNumber); i++ {
-
-		if ind1.Objectives[i] < ind2.Objectives[i] {
-			better = true
-		}
-
-		if ind2.Objectives[i] < ind1.Objectives[i] {
-			worse = true
-		}
-
-	}
-
-	if worse {
-
-		if better {
-			return ParetoNondominated
-		} else {
-			return ParetoDominated
-		}
-
-	} else {
-
-		if better {
-			return ParetoDominating
-		} else {
-			return ParetoEqual
-		}
-	}
-}
 
 func fastNondominatedSort() {
 
@@ -132,8 +71,8 @@ func fastNondominatedSort() {
 
 			for q := 0; q < len(population.Individuals); q++ {
 
-				res := compare(&population.Individuals[p], &population.Individuals[q])
-				if ParetoDominated == res {
+				res := evolutionaryAlgo.Compare(&population.Individuals[p].Individual, &population.Individuals[q].Individual)
+				if common.ParetoDominated == res {
 					population.Individuals[p].DominatedCount++
 				}
 

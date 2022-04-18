@@ -21,6 +21,7 @@ type EvolutionaryAlgo struct {
 	CroseoverRate    float64
 	MutationRate     float64
 	PopulationSize   int
+	TotalGeneration  int
 }
 
 func (rcvr *Individual) RandomInit(length int, min float64, max float64) {

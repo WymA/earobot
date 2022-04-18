@@ -26,33 +26,15 @@ type NSGA2Population struct {
 	ParetoFront [][]NSGA2Ind
 }
 
-// //uptate the extreme point , that's f up/down
-// func update_extreme_point(ind *NSGA2Ind) {
+func initPopulation() {
 
-// }
-
-// func Pareto_HyperVolume_compare_sectorialgrid(ind *NSGA2Ind) {
-
-// }
-// func GetFastigiateHyperVolume(ind *NSGA2Ind, indIndex int, ReferencePoint []float64) {
-
-// }
-
-// func uniform_selection(ind_selected *NSGA2Ind) {
-
-// }
-
-func genSelection() {
-
+	population.Individuals = make([]NSGA2Ind, evolutionaryAlgo.PopulationSize)
+	population.ParetoFront = make([][]NSGA2Ind, 0)
 }
 
 func genMutation() {
 
 }
-
-// func population2front(mypopulation []NSGA2Ind, population_front [][]float64) {
-
-// }
 
 func fastNondominatedSort() {
 
@@ -103,7 +85,7 @@ func evaluation() {
 // one generation
 func runOneGerration() {
 
-	genSelection()
+	// GeneCrossover()
 	genMutation()
 
 	// population.insert(population.end(), offspring.begin(), offspring.end())
@@ -114,34 +96,39 @@ func runOneGerration() {
 
 	// population.clear()
 
-	// for i := 0; (i < pareto_front.size()) && (population.size()+pareto_front[i].size() < pop_size); i++ {
+	//for i := 0; (i < pareto_front.size()) && (population.size()+pareto_front[i].size() < pop_size); i++ {
+	for i := 0; len(population.Individuals)+len(population.ParetoFront[0]) < evolutionaryAlgo.PopulationSize; i++ {
+		// 	CrowdDistAssign(pareto_front[i])
+		// 	population.insert(population.end(), pareto_front[i].begin(), pareto_front[i].end())
 
-	// 	CrowdDistAssign(pareto_front[i])
-	// 	population.insert(population.end(), pareto_front[i].begin(), pareto_front[i].end())
+		// }
 
-	// }
+		// if population.size() < pop_size {
 
-	// if population.size() < pop_size {
+		// 	SortByPareto(pareto_front[i])
+		// 	population.insert(population.end(), pareto_front[i].begin(),
+		// 		pareto_front[i].begin()+pop_size-population.size()) //Offset
+		// }
 
-	// 	SortByPareto(pareto_front[i])
-	// 	population.insert(population.end(), pareto_front[i].begin(),
-	// 		pareto_front[i].begin()+pop_size-population.size()) //Offset
-	// }
+		// // maxc = population.begin()->indiv.coverage ;
 
-	// // maxc = population.begin()->indiv.coverage ;
+		// for i := 0; i < population.size(); i++ {
+		// 	if population[i].indiv.coverage > maxc {
+		// 		maxc = population[i].indiv.coverage
+		// 	}
 
-	// for i := 0; i < population.size(); i++ {
-	// 	if population[i].indiv.coverage > maxc {
-	// 		maxc = population[i].indiv.coverage
-	// 	}
-
-	// }
+	}
 
 	// GetBestObj(kObjNodes)
 	// GetBestObj(kObjEnergy)
 
 }
 
-func execute(run int, hvl []float64, igd []float64, totaltime *float64, unevolvetime *float64) {
+// Evolve begins
+func Evolve() {
 
+	initPopulation()
+	for i := 0; i < evolutionaryAlgo.TotalGeneration; i++ {
+		runOneGerration()
+	}
 }

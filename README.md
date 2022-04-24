@@ -13,6 +13,6 @@ EARobot is a simulator program working based on Evolutionary Algorithm. The orig
 ### Test Functions for Optmization
 [wiki Test functions for optimization](https://en.wikipedia.org/wiki/Test_functions_for_optimization)
 
-1. [Kursawe function](./cmd/kursawe.go)
+1. [Kursawe function](./cmd/testfunction/kursawe.go)
 
 ### Path Planning

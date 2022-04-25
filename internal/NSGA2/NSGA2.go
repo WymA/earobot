@@ -6,6 +6,8 @@ import (
 
 var population NSGA2Population
 var evolutionaryAlgo common.EvolutionaryAlgo
+var evalFunc1 func(ind *NSGA2Ind)
+var evalFunc2 func(ind *NSGA2Ind)
 
 type NSGA2Ind struct {
 	common.Individual
@@ -78,8 +80,10 @@ func fastNondominatedSort() {
 	}
 }
 
-func evaluation() {
+//
+func Evaluation(func1 func(ind *NSGA2Ind), func2 func(ind *NSGA2Ind)) (ind *NSGA2Ind) {
 
+	return ind
 }
 
 // one generation
@@ -90,7 +94,7 @@ func runOneGerration() {
 
 	// population.insert(population.end(), offspring.begin(), offspring.end())
 
-	evaluation()
+	Evaluation(evalFunc1, evalFunc2)
 
 	fastNondominatedSort()
 

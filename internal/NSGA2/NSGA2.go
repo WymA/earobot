@@ -2,6 +2,7 @@ package NSGA2
 
 import (
 	"earobot/internal/common"
+	"time"
 )
 
 var population NSGA2Population
@@ -29,6 +30,8 @@ func Init(initEvolutionaryAlgo common.EvolutionaryAlgo, initEvalFunc []func(ind 
 	evolutionaryAlgo = initEvolutionaryAlgo
 	evalFunc = initEvalFunc
 
+	initPopulation()
+
 	if len(evalFunc) != evolutionaryAlgo.ObjectivesNumber {
 		panic("Init NSGA-II failed, the number of evaluation functions should equal to the numbers of objectives ")
 	}
@@ -38,6 +41,12 @@ func Init(initEvolutionaryAlgo common.EvolutionaryAlgo, initEvalFunc []func(ind 
 func initPopulation() {
 
 	population.Individuals = make([]NSGA2Ind, evolutionaryAlgo.PopulationSize)
+
+	for i := 0; i < len(population.Individuals); i++ {
+		population.Individuals[i].Variables = make([]float64, evolutionaryAlgo.VariablesLength)
+		population.Individuals[i].Objectives = make([]float64, evolutionaryAlgo.ObjectivesNumber)
+	}
+
 	population.ParetoFront = make([][]NSGA2Ind, 0)
 }
 
@@ -88,14 +97,29 @@ func fastNondominatedSort() {
 }
 
 //
-func Evaluation() {
+func evaluation() (count int, timeConsume time.Duration, highestResult float64, lowestResult float64) {
 
+	count = 0
+	startTime := time.Now()
 	for _, v := range population.Individuals {
 
 		for i := 0; i < evolutionaryAlgo.ObjectivesNumber; i++ {
 			v.Objectives[i] = evalFunc[i](&v)
+
+			if v.Objectives[i] > highestResult {
+				highestResult = v.Objectives[i]
+			}
+			if v.Objectives[i] < lowestResult {
+				lowestResult = v.Objectives[i]
+			}
+			count++
 		}
 	}
+
+	timeConsume = time.Since(startTime)
+
+	return count, timeConsume, highestResult, lowestResult
+
 }
 
 // one generation
@@ -106,7 +130,7 @@ func runOneGerration() {
 
 	// population.insert(population.end(), offspring.begin(), offspring.end())
 
-	Evaluation()
+	evaluation()
 
 	fastNondominatedSort()
 
@@ -143,7 +167,6 @@ func runOneGerration() {
 // Evolve begins
 func Evolve() {
 
-	initPopulation()
 	for i := 0; i < evolutionaryAlgo.TotalGeneration; i++ {
 		runOneGerration()
 	}

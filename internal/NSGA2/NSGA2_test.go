@@ -43,3 +43,34 @@ func Test_function(t *testing.T) {
 	count, timeConsume, highestResult, lowestResult := evaluation()
 	t.Logf("\ncount: %d, timeConsume: %d, highestResult: %f, lowestResult: %f", count, timeConsume, highestResult, lowestResult)
 }
+
+func TestInit(t *testing.T) {
+	type args struct {
+		initEvolutionaryAlgo common.EvolutionaryAlgo
+		initEvalFunc         []func(ind *NSGA2Ind) float64
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			Init(tt.args.initEvolutionaryAlgo, tt.args.initEvalFunc)
+		})
+	}
+}
+
+func Test_crowdDistAssign(t *testing.T) {
+	tests := []struct {
+		name string
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			crowdDistAssign()
+		})
+	}
+}

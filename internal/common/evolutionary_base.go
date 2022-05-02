@@ -1,10 +1,16 @@
 package common
 
+import "math"
+
 const (
 	ParetoDominating   int = 0
 	ParetoDominated        = 1
 	ParetoNondominated     = 2
 	ParetoEqual            = 3
+)
+
+const (
+	INFINITE float64 = math.MaxFloat64
 )
 
 type Individual struct {

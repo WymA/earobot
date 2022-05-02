@@ -2,10 +2,12 @@ package NSGA2
 
 import (
 	"earobot/internal/common"
+	"sort"
 	"time"
 )
 
 var population NSGA2Population
+var offspring NSGA2Population
 var evolutionaryAlgo common.EvolutionaryAlgo
 
 var evalFunc []func(ind *NSGA2Ind) float64
@@ -30,11 +32,11 @@ func Init(initEvolutionaryAlgo common.EvolutionaryAlgo, initEvalFunc []func(ind 
 	evolutionaryAlgo = initEvolutionaryAlgo
 	evalFunc = initEvalFunc
 
-	initPopulation()
-
 	if len(evalFunc) != evolutionaryAlgo.ObjectivesNumber {
 		panic("Init NSGA-II failed, the number of evaluation functions should equal to the numbers of objectives ")
 	}
+
+	initPopulation()
 
 }
 
@@ -43,14 +45,49 @@ func initPopulation() {
 	population.Individuals = make([]NSGA2Ind, evolutionaryAlgo.PopulationSize)
 
 	for i := 0; i < len(population.Individuals); i++ {
-		population.Individuals[i].Variables = make([]float64, evolutionaryAlgo.VariablesLength)
+
+		population.Individuals[i].RandomInit(evolutionaryAlgo.VariablesLength, evolutionaryAlgo.VariablesMin, evolutionaryAlgo.VariablesMax)
 		population.Individuals[i].Objectives = make([]float64, evolutionaryAlgo.ObjectivesNumber)
 	}
 
 	population.ParetoFront = make([][]NSGA2Ind, 0)
 }
 
-func genMutation() {
+func geneCrossover() {
+
+}
+
+func geneMutation() {
+
+}
+
+func crowdDistAssign() {
+
+	for _, front := range population.ParetoFront {
+
+		if len(front) > 0 {
+
+			frontSize := len(front)
+
+			for _, ind := range front {
+				ind.CrowdDist = 0.0
+			}
+
+			for objectiveIdx := 0; objectiveIdx < evolutionaryAlgo.ObjectivesNumber; objectiveIdx++ {
+
+				sort.SliceStable(front, func(i, j int) bool {
+					return front[i].Objectives[objectiveIdx] < front[j].Objectives[objectiveIdx]
+				})
+
+				front[0].CrowdDist, front[frontSize-1].CrowdDist = common.INFINITE, common.INFINITE
+
+				for i := 1; i < frontSize-1; i++ {
+					front[i].CrowdDist += front[i+1].Objectives[objectiveIdx] - front[i-1].Objectives[objectiveIdx]
+				}
+
+			}
+		}
+	}
 
 }
 
@@ -125,20 +162,22 @@ func evaluation() (count int, timeConsume time.Duration, highestResult float64, 
 // one generation
 func runOneGerration() {
 
-	// GeneCrossover()
-	genMutation()
+	// create offspring generation
+	//geneCrossover()
+	//geneMutation()
 
-	// population.insert(population.end(), offspring.begin(), offspring.end())
+	//offspring = evolutionaryAlgo.CreateOffspring(population.Individuals.Individual)
 
 	evaluation()
 
 	fastNondominatedSort()
 
-	// population.clear()
+	// population clear
+	population.Individuals = make([]NSGA2Ind, evolutionaryAlgo.PopulationSize)
 
 	//for i := 0; (i < pareto_front.size()) && (population.size()+pareto_front[i].size() < pop_size); i++ {
 	for i := 0; len(population.Individuals)+len(population.ParetoFront[0]) < evolutionaryAlgo.PopulationSize; i++ {
-		// 	CrowdDistAssign(pareto_front[i])
+		// 	crowdDistAssign(pareto_front[i])
 		// 	population.insert(population.end(), pareto_front[i].begin(), pareto_front[i].end())
 
 		// }
@@ -158,9 +197,6 @@ func runOneGerration() {
 		// 	}
 
 	}
-
-	// GetBestObj(kObjNodes)
-	// GetBestObj(kObjEnergy)
 
 }
 

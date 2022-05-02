@@ -4,5 +4,9 @@ func runKursawe() {
 
 }
 
+func evaluationTest() {
+
+}
+
 func main() {
 }

@@ -1,4 +1,4 @@
-package snga
+package NSGA2
 
 import (
 	"earobot/internal/common"
@@ -6,8 +6,8 @@ import (
 
 var population NSGA2Population
 var evolutionaryAlgo common.EvolutionaryAlgo
-var evalFunc1 func(ind *NSGA2Ind)
-var evalFunc2 func(ind *NSGA2Ind)
+
+var evalFunc []func(ind *NSGA2Ind) float64
 
 type NSGA2Ind struct {
 	common.Individual
@@ -19,13 +19,20 @@ type NSGA2Ind struct {
 
 }
 
-// func (rcvr *NSGA2Ind) ObjEvaluation() {
-
-// }
-
 type NSGA2Population struct {
 	Individuals []NSGA2Ind
 	ParetoFront [][]NSGA2Ind
+}
+
+func Init(initEvolutionaryAlgo common.EvolutionaryAlgo, initEvalFunc []func(ind *NSGA2Ind) float64) {
+
+	evolutionaryAlgo = initEvolutionaryAlgo
+	evalFunc = initEvalFunc
+
+	if len(evalFunc) != evolutionaryAlgo.ObjectivesNumber {
+		panic("Init NSGA-II failed, the number of evaluation functions should equal to the numbers of objectives ")
+	}
+
 }
 
 func initPopulation() {
@@ -81,9 +88,14 @@ func fastNondominatedSort() {
 }
 
 //
-func Evaluation(func1 func(ind *NSGA2Ind), func2 func(ind *NSGA2Ind)) (ind *NSGA2Ind) {
+func Evaluation() {
 
-	return ind
+	for _, v := range population.Individuals {
+
+		for i := 0; i < evolutionaryAlgo.ObjectivesNumber; i++ {
+			v.Objectives[i] = evalFunc[i](&v)
+		}
+	}
 }
 
 // one generation
@@ -94,7 +106,7 @@ func runOneGerration() {
 
 	// population.insert(population.end(), offspring.begin(), offspring.end())
 
-	Evaluation(evalFunc1, evalFunc2)
+	Evaluation()
 
 	fastNondominatedSort()
 
